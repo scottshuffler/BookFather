@@ -113,19 +113,33 @@ def send_end(message):
     disconnect(conn, c)
 
 
-@bot.message_handler(commands=['current'])
-def send_current(message):
+@bot.message_handler(commands=['info'])
+def send_info(message):
     conn, c = connect()
-    # conn = sqlite3.connect('books.db')
-    # c = conn.cursor()
-    c.execute("SELECT title from books WHERE finished=0")
+    c.execute("SELECT author,title,date from books WHERE finished=0")
     try:
-        title = c.fetchone()[0]
-        bot.reply_to(message, u"Current book is " + title)
+        data = c.fetchall()
+        bot.reply_to(message, u"Current book is " + data[0][1] + " by " + data[0][0] + " and reading ends on " + data[0][1])
     except Exception as e:
         bot.reply_to(message, u"There is no current book")
         print e
     disconnect(conn, c)
+
+
+@bot.message_handler(commands=['done'])
+def send_done(message):
+    bot.reply_to(message, u"This should give a list of people who have finished reading")
+
+
+@bot.message_handler(commands=['help'])
+def send_done(message):
+    bot.reply_to(message, u"Commands\r\n"
+                          u"/join - Allows you to participate within the club\r\n"
+                          u"/finished - Marks yourself as done reading the current book\r\n"
+                          u"/begin author,title,end_date - Begins a new book\r\n"
+                          u"/end title - Ends the current book\r\n"
+                          u"/info - Display all info about the current book\r\n"
+                          u"/done - List all users done reading the current book\r\n")
 
 
 startup()
