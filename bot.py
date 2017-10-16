@@ -119,7 +119,7 @@ def send_info(message):
     c.execute("SELECT author,title,date from books WHERE finished=0")
     try:
         data = c.fetchall()
-        bot.reply_to(message, u"Current book is " + data[0][1] + " by " + data[0][0] + " and reading ends on " + data[0][1])
+        bot.reply_to(message, u"Current book is " + data[0][1] + " by " + data[0][0] + " and reading ends on " + data[0][2])
     except Exception as e:
         bot.reply_to(message, u"There is no current book")
         print e
